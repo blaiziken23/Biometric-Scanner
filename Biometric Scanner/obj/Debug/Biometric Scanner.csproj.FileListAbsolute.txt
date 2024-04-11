@@ -1,0 +1,36 @@
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\Biometric Scanner.exe.config
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\Biometric Scanner.exe
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\Biometric Scanner.pdb
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.MainForm.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.Properties.Resources.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric Scanner.csproj.GenerateResource.cache
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric Scanner.csproj.CoreCompileInputs.cache
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric Scanner.exe
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric Scanner.pdb
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\MySqlConnector.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Buffers.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Memory.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\MySqlConnector.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Buffers.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Memory.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric Scanner.csproj.CopyComplete
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.UserControlRegister.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.UserControlScanner.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\DPCtlUruNet.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\DPUruNet.dll
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\DPCtlUruNet.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\bin\Debug\DPUruNet.xml
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.ReaderSelectionForm.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.UserControlSplashScreen.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.RegisterForm.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.ScannerForm.resources
