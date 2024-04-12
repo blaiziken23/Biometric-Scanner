@@ -96,8 +96,8 @@ namespace Biometric_Scanner
       this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
       this.tableLayoutPanel2.Name = "tableLayoutPanel2";
       this.tableLayoutPanel2.RowCount = 2;
-      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
       this.tableLayoutPanel2.Size = new System.Drawing.Size(1128, 472);
       this.tableLayoutPanel2.TabIndex = 0;
       // 
@@ -106,10 +106,10 @@ namespace Biometric_Scanner
       this.panel5.Controls.Add(this.panel7);
       this.panel5.Controls.Add(this.panel6);
       this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.panel5.Location = new System.Drawing.Point(0, 188);
+      this.panel5.Location = new System.Drawing.Point(0, 141);
       this.panel5.Margin = new System.Windows.Forms.Padding(0);
       this.panel5.Name = "panel5";
-      this.panel5.Size = new System.Drawing.Size(1128, 284);
+      this.panel5.Size = new System.Drawing.Size(1128, 331);
       this.panel5.TabIndex = 1;
       // 
       // panel7
@@ -124,16 +124,16 @@ namespace Biometric_Scanner
       // 
       // StatusLabel
       // 
-      this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-      this.StatusLabel.AutoSize = true;
+      this.StatusLabel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.StatusLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.StatusLabel.ForeColor = System.Drawing.Color.White;
-      this.StatusLabel.Location = new System.Drawing.Point(439, 0);
+      this.StatusLabel.Location = new System.Drawing.Point(0, 0);
       this.StatusLabel.Margin = new System.Windows.Forms.Padding(0);
       this.StatusLabel.Name = "StatusLabel";
-      this.StatusLabel.Size = new System.Drawing.Size(250, 81);
+      this.StatusLabel.Size = new System.Drawing.Size(1128, 100);
       this.StatusLabel.TabIndex = 0;
       this.StatusLabel.Text = "TIME IN";
+      this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // panel6
       // 
@@ -155,7 +155,7 @@ namespace Biometric_Scanner
       this.TimeLabel.Name = "TimeLabel";
       this.TimeLabel.Size = new System.Drawing.Size(1128, 100);
       this.TimeLabel.TabIndex = 1;
-      this.TimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      this.TimeLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
       // panel4
       // 
@@ -164,17 +164,17 @@ namespace Biometric_Scanner
       this.panel4.Location = new System.Drawing.Point(0, 0);
       this.panel4.Margin = new System.Windows.Forms.Padding(0);
       this.panel4.Name = "panel4";
-      this.panel4.Size = new System.Drawing.Size(1128, 188);
+      this.panel4.Size = new System.Drawing.Size(1128, 141);
       this.panel4.TabIndex = 0;
       // 
       // NameLabel
       // 
       this.NameLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.NameLabel.Font = new System.Drawing.Font("Segoe UI", 49.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.NameLabel.Font = new System.Drawing.Font("Segoe UI", 60F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.NameLabel.Location = new System.Drawing.Point(0, 0);
       this.NameLabel.Margin = new System.Windows.Forms.Padding(0);
       this.NameLabel.Name = "NameLabel";
-      this.NameLabel.Size = new System.Drawing.Size(1128, 188);
+      this.NameLabel.Size = new System.Drawing.Size(1128, 141);
       this.NameLabel.TabIndex = 2;
       this.NameLabel.Text = "SCAN FINGERPRINT...";
       this.NameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -278,7 +278,7 @@ namespace Biometric_Scanner
       this.Controls.Add(this.panel1);
       this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(122)))), ((int)(((byte)(141)))));
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "ScannerForm";
@@ -291,7 +291,6 @@ namespace Biometric_Scanner
       this.tableLayoutPanel2.ResumeLayout(false);
       this.panel5.ResumeLayout(false);
       this.panel7.ResumeLayout(false);
-      this.panel7.PerformLayout();
       this.panel6.ResumeLayout(false);
       this.panel4.ResumeLayout(false);
       this.panel2.ResumeLayout(false);

@@ -42,6 +42,7 @@ namespace Biometric_Scanner
     Color TimeIn = Color.FromArgb(105, 108, 255);
     Color TimeOut = Color.FromArgb(113, 221, 55);
     Color Error = Color.FromArgb(255, 62, 29);
+    Color Warning = Color.FromArgb(255, 171, 0);
 
     public ScannerForm()
     {
@@ -106,7 +107,7 @@ namespace Biometric_Scanner
       }
     }
 
-    public async Task VerifyFingerprint(Fmd capturedFmd)
+    private async Task VerifyFingerprint(Fmd capturedFmd)
     {
       DateTime currentTime = DateTime.Now;
 
@@ -158,7 +159,7 @@ namespace Biometric_Scanner
           // If no match is found after checking all records
           //Report("", "Si bro ay di nakaregistered");
           Console.WriteLine("No matching fingerprint found in the database");
-          Display("NO MATCHING FINGERPRINT.", "TRY AGAIN!", currentTime, Error);
+          Display("NO MATCHING FINGERPRINT...", "TRY AGAIN!", currentTime, Error);
         }
       }
       catch (Exception ex)
@@ -310,6 +311,7 @@ namespace Biometric_Scanner
       TimeSpan timestart = TimeSpan.Zero;
       TimeSpan timeend = TimeSpan.Zero;
       DateTime currentTime = DateTime.Now;
+      //DateTime created = DateTime.Now;
 
       try
       {
@@ -352,6 +354,8 @@ namespace Biometric_Scanner
         else
         {
           // Regular Day
+          //TimeSpan timeSpan = created.TimeOfDay.Add(TimeSpan.FromMinutes(1));
+
           string query = "INSERT INTO `attendance_tbl`(`date`, `time_in`, `status`, `employee_id`, `late`, `schedule_id`) SELECT @date, @time_in, @status, @employee_id, @late, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id";
           using (MySqlCommand command = new MySqlCommand(query, conn))
           {
@@ -382,11 +386,12 @@ namespace Biometric_Scanner
       int primaryId = 0;
       TimeSpan total = TimeSpan.Zero;
       DateTime currentTime = DateTime.Now;
+      DateTime created = DateTime.Now;
 
       try
       {
         //string query = "SELECT `id`, `status` FROM `attendance_tbl` WHERE `employee_id` = @employee_id";
-        string query = "SELECT attendance_tbl.id, attendance_tbl.status, CONCAT(employee_tbl.lastname, ' ', employee_tbl.firstname) AS name FROM `attendance_tbl` INNER JOIN employee_tbl ON employee_tbl.id = attendance_tbl.employee_id WHERE `employee_id` = @employee_id ORDER BY attendance_tbl.id DESC LIMIT 1";
+        string query = "SELECT attendance_tbl.id, attendance_tbl.status, CONCAT(employee_tbl.lastname, ' ', employee_tbl.firstname) AS name, attendance_tbl.created FROM `attendance_tbl` INNER JOIN employee_tbl ON employee_tbl.id = attendance_tbl.employee_id WHERE `employee_id` = @employee_id ORDER BY attendance_tbl.id DESC LIMIT 1";
         using (MySqlCommand command = new MySqlCommand(query, conn))
         {
           command.Parameters.AddWithValue("@employee_id", id);
@@ -397,6 +402,7 @@ namespace Biometric_Scanner
               status = reader.GetInt16("status");
               primaryId = reader.GetInt16("id");
               employeeName = reader.GetString("name");
+              created = reader.GetDateTime("created");
             }
             reader.Close();
           }
@@ -405,21 +411,31 @@ namespace Biometric_Scanner
         Console.WriteLine(primaryId);
         if (status == 1)
         {
-          // Update Time Out
-          string timeOut = "UPDATE `attendance_tbl` SET `time_out` = @timeout, `hour` = TIMEDIFF(`time_out`, `time_in`), `status` = @status WHERE `id` = @id";
-          using (MySqlCommand command = new MySqlCommand(timeOut, conn))
-          {
-            command.Parameters.AddWithValue("@timeout", currentTime.TimeOfDay);
-            command.Parameters.AddWithValue("@id", primaryId);
-            command.Parameters.AddWithValue("@status", AttendanceStatus.OUT);
+          TimeSpan timeSpan = created.TimeOfDay.Add(TimeSpan.FromMinutes(5));
 
-            int result = await command.ExecuteNonQueryAsync();
-            if (result > 0)
+          if (currentTime.TimeOfDay < timeSpan)
+          {
+            Display(employeeName, "TOO EARLY TO LOG OUT", currentTime, Warning);
+          }
+          else
+          {
+            // Update Time Out
+            string timeOut = "UPDATE `attendance_tbl` SET `time_out` = @timeout, `hour` = TIMEDIFF(`time_out`, `time_in`), `status` = @status WHERE `id` = @id";
+            using (MySqlCommand command = new MySqlCommand(timeOut, conn))
             {
-              Display(employeeName, "TIME OUT", currentTime, TimeOut);
-              Console.WriteLine("Time OUT");
+              command.Parameters.AddWithValue("@timeout", currentTime.TimeOfDay);
+              command.Parameters.AddWithValue("@id", primaryId);
+              command.Parameters.AddWithValue("@status", AttendanceStatus.OUT);
+
+              int result = await command.ExecuteNonQueryAsync();
+              if (result > 0)
+              {
+                Display(employeeName, "TIME OUT", currentTime, TimeOut);
+                Console.WriteLine("Time OUT");
+              }
             }
           }
+          
         }
         else if (status == 2)
         {
