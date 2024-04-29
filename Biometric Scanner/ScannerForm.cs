@@ -221,9 +221,11 @@ namespace Biometric_Scanner
           if (canInsert)
           {
             int result = await AttendanceData(id, conn);
+            Console.WriteLine("result dito " + result);
             if (result == 0)
             {
               await NoSchedInsertAttendance(id);
+              Console.WriteLine("no sched " + id);
             }
             
           }
@@ -294,8 +296,8 @@ namespace Biometric_Scanner
             command.Parameters.AddWithValue("@status", ScheduleStatus.INC);
             command.Parameters.AddWithValue("@employee_id", id);
             int result = await command.ExecuteNonQueryAsync();
-
-            if (result != 0) await AttendanceData(id, conn);
+            Console.WriteLine(result);
+            //if (result != 0) await AttendanceData(id, conn);
           }
           await conn.CloseAsync();
         }
@@ -315,7 +317,22 @@ namespace Biometric_Scanner
 
       try
       {
-        string scheduleQuery = "SELECT schedule_tbl.id, `start`, `end`, `day`, `total_hour`, schedule_tbl.status, `employee_id`, CONCAT(employee_tbl.lastname, ' ', employee_tbl.firstname) AS name FROM `schedule_tbl` INNER JOIN employee_tbl ON employee_tbl.id = schedule_tbl.employee_id WHERE `employee_id` = @employee_id";
+        string infoQuery = "SELECT CONCAT(`lastname`, ' ', `firstname`) AS name FROM `employee_tbl` WHERE `id` = @id";
+        using (MySqlCommand command = new MySqlCommand(infoQuery, conn))
+        {
+          command.Parameters.AddWithValue("@id", id);
+          using (MySqlDataReader reader = await command.ExecuteReaderAsync())
+          {
+            while (await reader.ReadAsync())
+            {
+              employeeName = reader.GetString("name");
+            }
+            reader.Close();
+          }
+        }
+
+        // Get Schedule
+        string scheduleQuery = "SELECT schedule_tbl.id, `start`, `end`, `day`, `total_hour`, schedule_tbl.status, `employee_id`, CONCAT(employee_tbl.lastname, ' ', employee_tbl.firstname) AS name FROM `schedule_tbl` INNER JOIN employee_tbl ON employee_tbl.id = schedule_tbl.employee_id WHERE `employee_id` = @employee_id AND schedule_tbl.day = DAYNAME(CURDATE()) AND (schedule_tbl.status = 1 OR schedule_tbl.status = 2)";
         using (MySqlCommand command = new MySqlCommand(scheduleQuery, conn))
         {
           command.Parameters.AddWithValue("@employee_id", id);
@@ -325,9 +342,9 @@ namespace Biometric_Scanner
             {
               timestart = reader.GetTimeSpan("start");
               timeend = reader.GetTimeSpan("end");
-              employeeName = reader.GetString("name");
             }
             reader.Close();
+            Console.WriteLine(timestart);
           }
         }
 
@@ -356,7 +373,7 @@ namespace Biometric_Scanner
           // Regular Day
           //TimeSpan timeSpan = created.TimeOfDay.Add(TimeSpan.FromMinutes(1));
 
-          string query = "INSERT INTO `attendance_tbl`(`date`, `time_in`, `status`, `employee_id`, `late`, `schedule_id`) SELECT @date, @time_in, @status, @employee_id, @late, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id";
+          string query = "INSERT INTO `attendance_tbl`(`date`, `time_in`, `status`, `employee_id`, `late`, `schedule_id`) SELECT @date, @time_in, @status, @employee_id, @late, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id AND (schedule_tbl.status = 1 OR schedule_tbl.status = 2)";
           using (MySqlCommand command = new MySqlCommand(query, conn))
           {
             command.Parameters.AddWithValue("@date", todaydate);
@@ -368,6 +385,7 @@ namespace Biometric_Scanner
             command.Parameters.AddWithValue("@late", (timestart < currentTime.TimeOfDay && timestart != TimeSpan.Zero) ? lateduration : TimeSpan.Zero);
             int result = await command.ExecuteNonQueryAsync();
             Display(employeeName, "TIME IN", currentTime, TimeIn);
+            Console.WriteLine(result +  "dito");
             return result;
           }
         }
@@ -416,6 +434,24 @@ namespace Biometric_Scanner
           if (currentTime.TimeOfDay < timeSpan)
           {
             Display(employeeName, "TOO EARLY TO LOG OUT", currentTime, Warning);
+          }
+          else if (currentTime.Hour >= 20)
+          {
+            // Update Night Time Out 
+            string timeOut = "UPDATE `attendance_tbl` SET `night_time_out` = @night_time_out, `hour` = TIMEDIFF(`time_out`, `time_in`), `status` = @status WHERE `id` = @id";
+            using (MySqlCommand command = new MySqlCommand(timeOut, conn))
+            {
+              command.Parameters.AddWithValue("@night_time_out", currentTime.TimeOfDay);
+              command.Parameters.AddWithValue("@id", primaryId);
+              command.Parameters.AddWithValue("@status", AttendanceStatus.NIGHT_OUT);
+
+              int result = await command.ExecuteNonQueryAsync();
+              if (result > 0)
+              {
+                Display(employeeName, "TIME OUT", currentTime, TimeOut);
+                Console.WriteLine("Time OUT");
+              }
+            }
           }
           else
           {
