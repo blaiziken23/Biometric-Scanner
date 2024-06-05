@@ -227,10 +227,20 @@ namespace Biometric_Scanner
               await NoSchedInsertAttendance(id);
               Console.WriteLine("no sched " + id);
             }
-            
           }
           else
           {
+            /*int result = await AttendanceData(id, conn);
+            Console.WriteLine("result dito naa " + result);
+            if (result == 0)
+            {
+              await NoSchedInsertAttendance(id);
+              Console.WriteLine("no sched " + id);
+            }
+            else
+            {
+              
+            }*/
             await UpdateAttendance(id, conn);
             Console.WriteLine("update na");
           }
@@ -282,23 +292,73 @@ namespace Biometric_Scanner
 
     private async Task NoSchedInsertAttendance(int id)
     {
+      DateTime currentTime = DateTime.Now;
       try
       {
         using (MySqlConnection conn = new MySqlConnection(connstring))
         {
           // Insert Schedule
           await conn.OpenAsync();
+          bool canInsert = false;
           string query = "INSERT INTO `schedule_tbl`(`day`, `status`, `employee_id`) " +
-                          "VALUES (@day, @status, @employee_id)";
+                          "VALUES (@day, @status, @employee_id);";
           using (MySqlCommand command = new MySqlCommand(query, conn))
           {
             command.Parameters.AddWithValue("@day", currentDay.ToUpper());
             command.Parameters.AddWithValue("@status", ScheduleStatus.INC);
             command.Parameters.AddWithValue("@employee_id", id);
             int result = await command.ExecuteNonQueryAsync();
-            Console.WriteLine(result);
-            //if (result != 0) await AttendanceData(id, conn);
+            if (result > 0) canInsert = true;
           }
+
+          if (canInsert)
+          {
+
+            if (currentTime.Hour >= 18) // 6 PM
+            {
+              // Night IN 
+              string nightInquery = "INSERT INTO `attendance_tbl`(`date`, `night_time_in`, `status`, `employee_id`, `schedule_id`) SELECT @date, @night_time_in, @status, @employee_id, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id AND schedule_tbl.status = 2 ORDER BY schedule_tbl.id DESC LIMIT 1";
+              using (MySqlCommand command = new MySqlCommand(nightInquery, conn))
+              {
+                command.Parameters.AddWithValue("@date", todaydate);
+                command.Parameters.AddWithValue("@night_time_in", currentTime.TimeOfDay);
+                command.Parameters.AddWithValue("@status", AttendanceStatus.NIGHT_IN);
+                command.Parameters.AddWithValue("@employee_id", id);
+                command.Parameters.AddWithValue("@schedule_tbl_employee_id", id);
+                command.Parameters.AddWithValue("@currentDay", currentDay);
+                int result = await command.ExecuteNonQueryAsync();
+                if (result > 0)
+                {
+                  Display(employeeName, "TIME IN", currentTime, TimeIn);
+                  Console.WriteLine("GABI");
+                }
+              }
+            }
+            else
+            {
+              // Regular Day
+              //TimeSpan timeSpan = created.TimeOfDay.Add(TimeSpan.FromMinutes(1));
+
+              string RegularInquery = "INSERT INTO `attendance_tbl`(`date`, `time_in`, `status`, `employee_id`, `schedule_id`) SELECT @date, @time_in, @status, @employee_id, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id AND schedule_tbl.status = 2 ORDER BY schedule_tbl.id DESC LIMIT 1";
+              using (MySqlCommand command = new MySqlCommand(RegularInquery, conn))
+              {
+                command.Parameters.AddWithValue("@date", todaydate);
+                command.Parameters.AddWithValue("@time_in", currentTime.TimeOfDay);
+                command.Parameters.AddWithValue("@status", AttendanceStatus.IN);
+                command.Parameters.AddWithValue("@employee_id", id);
+                command.Parameters.AddWithValue("@schedule_tbl_employee_id", id);
+                command.Parameters.AddWithValue("@currentDay", currentDay);
+                //command.Parameters.AddWithValue("@late", (timestart < currentTime.TimeOfDay && timestart != TimeSpan.Zero) ? lateduration : TimeSpan.Zero);
+                int result = await command.ExecuteNonQueryAsync();
+                if (result > 0)
+                {
+                  Display(employeeName, "TIME IN", currentTime, TimeIn);
+                  Console.WriteLine("qwertyuiop");
+                }
+              }
+            }
+          }
+          
           await conn.CloseAsync();
         }
       }
@@ -314,10 +374,10 @@ namespace Biometric_Scanner
       TimeSpan timeend = TimeSpan.Zero;
       DateTime currentTime = DateTime.Now;
       //DateTime created = DateTime.Now;
-
+      Console.WriteLine("andito na si biong revillar");
       try
       {
-        string infoQuery = "SELECT CONCAT(`lastname`, ' ', `firstname`) AS name FROM `employee_tbl` WHERE `id` = @id";
+        string infoQuery = "SELECT CONCAT(`firstname`, ' ', `lastname`) AS name, `suffix` FROM `employee_tbl` WHERE `id` = @id";
         using (MySqlCommand command = new MySqlCommand(infoQuery, conn))
         {
           command.Parameters.AddWithValue("@id", id);
@@ -325,7 +385,9 @@ namespace Biometric_Scanner
           {
             while (await reader.ReadAsync())
             {
-              employeeName = reader.GetString("name");
+              string fullname = reader.GetString("name");
+              string suffix = reader.GetString("suffix");
+              employeeName = $"{fullname} {suffix}";
             }
             reader.Close();
           }
@@ -344,16 +406,25 @@ namespace Biometric_Scanner
               timeend = reader.GetTimeSpan("end");
             }
             reader.Close();
-            Console.WriteLine(timestart);
+            Console.WriteLine("timestart: " + timestart);
           }
         }
 
-        TimeSpan lateduration = currentTime.TimeOfDay - timestart - TimeSpan.FromMinutes(5);
+        //TimeSpan lateduration = currentTime.TimeOfDay - timestart - TimeSpan.FromMinutes(5);
+        TimeSpan lateduration = currentTime.TimeOfDay - timestart;
 
-        if (currentTime.Hour >= 20) // 8 PM
+        /*TimeSpan timeSpan = created.TimeOfDay.Add(TimeSpan.FromMinutes(2));
+
+        if (currentTime.TimeOfDay < timeSpan)
+        {
+          Display(employeeName, "TOO EARLY TO LOG OUT", currentTime, Warning);
+        }*/
+
+
+        if (currentTime.Hour >= 18) // 6 PM
         {
           // Night IN 
-          string query = "INSERT INTO `attendance_tbl`(`date`, `night_time_in`, `status`, `employee_id`, `schedule_id`) SELECT @date, @night_time_in, @status, @employee_id, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id";
+          string query = "INSERT INTO `attendance_tbl`(`date`, `night_time_in`, `status`, `employee_id`, `schedule_id`) SELECT @date, @night_time_in, @status, @employee_id, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id AND schedule_tbl.status = 1";
           using (MySqlCommand command = new MySqlCommand(query, conn))
           {
             command.Parameters.AddWithValue("@date", todaydate);
@@ -373,7 +444,7 @@ namespace Biometric_Scanner
           // Regular Day
           //TimeSpan timeSpan = created.TimeOfDay.Add(TimeSpan.FromMinutes(1));
 
-          string query = "INSERT INTO `attendance_tbl`(`date`, `time_in`, `status`, `employee_id`, `late`, `schedule_id`) SELECT @date, @time_in, @status, @employee_id, @late, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id AND (schedule_tbl.status = 1 OR schedule_tbl.status = 2)";
+          string query = "INSERT INTO `attendance_tbl`(`date`, `time_in`, `status`, `employee_id`, `late`, `schedule_id`) SELECT @date, @time_in, @status, @employee_id, @late, schedule_tbl.id FROM `schedule_tbl` WHERE schedule_tbl.day = @currentDay AND schedule_tbl.employee_id = @schedule_tbl_employee_id AND schedule_tbl.status = 1";
           using (MySqlCommand command = new MySqlCommand(query, conn))
           {
             command.Parameters.AddWithValue("@date", todaydate);
@@ -405,7 +476,7 @@ namespace Biometric_Scanner
       TimeSpan total = TimeSpan.Zero;
       DateTime currentTime = DateTime.Now;
       DateTime created = DateTime.Now;
-
+      
       try
       {
         //string query = "SELECT `id`, `status` FROM `attendance_tbl` WHERE `employee_id` = @employee_id";
@@ -435,10 +506,11 @@ namespace Biometric_Scanner
           {
             Display(employeeName, "TOO EARLY TO LOG OUT", currentTime, Warning);
           }
-          else if (currentTime.Hour >= 20)
+          else if (currentTime.Hour >= 18)
           {
             // Update Night Time Out 
             string timeOut = "UPDATE `attendance_tbl` SET `night_time_out` = @night_time_out, `hour` = TIMEDIFF(`time_out`, `time_in`), `status` = @status WHERE `id` = @id";
+            //string timeOut = "UPDATE `attendance_tbl` SET `night_time_out` = @night_time_out, `hour` = CASE WHEN `time_out` < `time_in` THEN TIMEDIFF('24:00:00', `time_in`) + TIMEDIFF(`time_out`, '00:00:00') ELSE TIMEDIFF(`time_out`, `time_in`) END, `status` = @status WHERE `id` = @id";
             using (MySqlCommand command = new MySqlCommand(timeOut, conn))
             {
               command.Parameters.AddWithValue("@night_time_out", currentTime.TimeOfDay);
@@ -476,9 +548,14 @@ namespace Biometric_Scanner
         else if (status == 2)
         {
           // Insert New Attendance
-          await AttendanceData(id, conn);
+          int result = await AttendanceData(id, conn);
+          if (result == 0)
+          {
+            await NoSchedInsertAttendance(id);
+            Console.WriteLine("no sched ulit " + id);
+          }
         }
-        else if (status == 2 && currentTime.Hour >= 20)
+        else if (status == 2 && currentTime.Hour >= 18)
         {
           // Update NIGHT_IN
           string timeOut = "UPDATE `attendance_tbl` SET `night_time_in` = @night_time_in, `hour` = TIMEDIFF(`time_out`, `time_in`), `status` = @status WHERE `id` = @id";

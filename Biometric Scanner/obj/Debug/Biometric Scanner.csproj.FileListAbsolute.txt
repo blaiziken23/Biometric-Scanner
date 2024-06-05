@@ -34,3 +34,4 @@ C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric 
 C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.UserControlSplashScreen.resources
 C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.RegisterForm.resources
 C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric_Scanner.ScannerForm.resources
+C:\Users\suicu\OneDrive\Desktop\Biometric Scanner\2\Biometric Scanner\Biometric Scanner\obj\Debug\Biometric Scanner.csproj.AssemblyReference.cache

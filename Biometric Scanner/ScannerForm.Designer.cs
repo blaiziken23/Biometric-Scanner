@@ -279,9 +279,9 @@ namespace Biometric_Scanner
       this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(122)))), ((int)(((byte)(141)))));
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-      this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "ScannerForm";
+      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "Scanner Form";
       this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ScannerForm_FormClosed);
